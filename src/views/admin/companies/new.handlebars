@@ -1,0 +1,36 @@
+{{#section "title"}}
+  <title>企業登録</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/admin-crud.css">
+{{/section}}
+<section class="admin-form">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/admin/companies">← 戻る</a>
+  </div>
+
+  <form method="post" action="/admin/companies">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+    <label>会社名 <input type="text" name="name" required></label>
+
+    <label>種別
+      <select name="company_type" required>
+        <option value="ses">SES</option>
+        <option value="end">END</option>
+      </select>
+    </label>
+
+    <label>会社URL <input type="text" name="domain" placeholder="example.com"></label>
+
+    <label class="inline">
+      <input type="checkbox" name="is_active" value="1" checked> 有効にする
+    </label>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">登録</button>
+      <a href="/admin/companies" class="btn-subtle">戻る</a>
+    </div>
+  </form>
+</section>

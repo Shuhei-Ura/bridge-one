@@ -1,0 +1,195 @@
+{{#section "title"}}
+  <title>送信リクエスト詳細</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/talents-form.css">
+{{/section}}
+{{#section "js"}}
+  <script src="/public/js/confirm.js"></script>
+{{/section}}
+
+<section class="tl-section">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/companies/{{companyId}}/requests/sent">← 送信済み一覧へ</a>
+  </div>
+
+  <!-- プロフィール（閲覧専用：グローバル詳細と同等） -->
+  <div class="tl-card">
+    <div class="tl-card__header">プロフィール</div>
+    <div class="tl-grid tl-grid--4">
+      <div class="tl-field">
+        <label class="tl-label">イニシャル（外部表示名）</label>
+        <div class="tl-readonly">{{request.talent.internal_name}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">年齢</label>
+        <div class="tl-readonly">{{#if request.talent.age}}{{request.talent.age}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">役割</label>
+        <div class="tl-readonly">{{#if request.talent.role}}{{request.talent.role}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">都道府県</label>
+        <div class="tl-readonly">{{#if request.talent.prefecture}}{{request.talent.prefecture}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">エリア</label>
+        <div class="tl-readonly">
+          {{#if request.talent.area}}{{request.talent.area}}{{else}}—{{/if}}
+        </div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">希望単価</label>
+        <div class="tl-readonly">{{#if request.talent.desired_rate}}{{request.talent.desired_rate}} 万円{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">稼働スタイル</label>
+        <div class="tl-readonly">{{workStyleLabel request.talent.work_style_level}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">稼働開始日</label>
+        <div class="tl-readonly">{{#if request.talent.available_from}}{{request.talent.available_from}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">サマリー</label>
+        <div class="tl-readonly">
+          {{#if request.talent.summary_text}}
+            {{{nl2br request.talent.summary_text}}}
+          {{else}}
+            —
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ドキュメント（URL/ファイル） -->
+  <div class="tl-card">
+    <div class="tl-card__header">ドキュメント</div>
+    <div class="tl-grid tl-grid--2">
+      <!-- スキルシートURL -->
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">スキルシートURL</label>
+        {{#if request.talent.skill_sheet_url}}
+          <p class="tl-readonly">
+            <a href="{{request.talent.skill_sheet_url}}" target="_blank" rel="noopener noreferrer">
+              {{request.talent.skill_sheet_url}}
+            </a>
+          </p>
+        {{else}}
+          <p class="tl-note">URLは登録されていません。</p>
+        {{/if}}
+      </div>
+
+      <!-- スキルシート（PDF） -->
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">スキルシート（PDF）</label>
+        {{#if request.talent.skill_sheet_pdf_url}}
+          <div class="tl-actions" style="margin-top:8px;">
+            <a class="tl-btn" href="{{request.talent.skill_sheet_pdf_url}}" target="_blank" rel="noopener noreferrer">PDFを別タブで開く</a>
+          </div>
+        {{else}}
+          <p class="tl-note">PDFは登録されていません。</p>
+        {{/if}}
+      </div>
+
+      <!-- ポートフォリオ（PDF） -->
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">ポートフォリオ（PDF）</label>
+        {{#if request.talent.portfolio_pdf_url}}
+          <div class="tl-actions" style="margin-top:8px;">
+            <a class="tl-btn" href="{{request.talent.portfolio_pdf_url}}" target="_blank" rel="noopener noreferrer">PDFを別タブで開く</a>
+          </div>
+        {{else}}
+          <p class="tl-note">PDFは登録されていません。</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+  <!-- 案件（タイトル＋詳細） -->
+  <div class="tl-card">
+    <div class="tl-card__header">案件</div>
+
+    {{!-- 保存（更新）フォーム --}}
+    <form method="post" action="/companies/{{companyId}}/requests/sent/{{request.id}}" class="request-form">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+      {{#ifeq request.status "pending"}}
+        <!-- 案件名（編集可能） -->
+        <div class="form-group">
+          <label class="tl-label">案件名</label>
+          <input
+            type="text"
+            class="tl-input"
+            name="request_title"
+            maxlength="120"
+            value="{{request.request_title}}"
+            placeholder="例）Reactエンジニア募集（長期案件）"
+            required
+          >
+        </div>
+
+        <!-- 案件詳細（編集可能） -->
+        <div class="form-group">
+          <label class="tl-label">案件詳細</label>
+          <textarea
+            class="form-textarea"
+            name="message_text"
+            rows="12"
+            maxlength="4000"
+            required
+          >{{request.message_text}}</textarea>
+          <p class="form-help">※ 単価・勤務地などの表現ミスを修正したら保存してください。</p>
+        </div>
+      {{else}}
+        <!-- 案件名（閲覧のみ） -->
+        <div class="form-group">
+          <label class="tl-label">案件名</label>
+          <div class="form-preview" style="white-space:normal">{{request.request_title}}</div>
+        </div>
+
+        <!-- 案件詳細（閲覧のみ） -->
+        <div class="form-group">
+          <label class="tl-label">案件詳細</label>
+          <pre class="form-preview">{{request.message_text}}</pre>
+          <p class="form-help">※ 承諾/辞退のため編集できません。</p>
+        </div>
+      {{/ifeq}}
+
+      <div class="form-actions">
+        <a class="btn-ghost" href="/companies/{{companyId}}/requests/sent">← 送信済み一覧へ</a>
+        {{#ifeq request.status "pending"}}
+          <button type="submit" class="btn-primary">保存（更新）</button>
+        {{/ifeq}}
+      </div>
+    </form>
+
+    {{!-- 取り下げフォーム（独立） --}}
+    {{#ifeq request.status "pending"}}
+      <form
+        method="post"
+        action="/companies/{{companyId}}/requests/sent/{{request.id}}/withdraw"
+        class="form-actions"
+        style="margin-top: 0;"
+        data-confirm="このリクエストを取り下げます。よろしいですか？"
+      >
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" class="btn-ghost">
+          取り下げる
+        </button>
+      </form>
+    {{/ifeq}}
+  </div>
+
+</section>

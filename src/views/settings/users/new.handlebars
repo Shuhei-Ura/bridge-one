@@ -1,0 +1,42 @@
+{{#section "title"}}
+  <title>ユーザー登録</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/admin-crud.css">
+{{/section}}
+
+<section class="admin-form">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="btn-subtle" href="/companies/{{companyId}}/settings/users">← ユーザー一覧へ</a>
+  </div>
+
+  <form method="post" action="/companies/{{companyId}}/settings/users">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+    <label>氏名 <input type="text" name="name" required></label>
+    <label>メール <input type="email" name="email" required></label>
+
+    <label>パスワード
+      <input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="72">
+    </label>
+    <label>パスワード（確認）
+      <input type="password" name="password_confirm" autocomplete="new-password" required minlength="8" maxlength="72">
+    </label>
+
+    <label>ロール
+      <select name="role" required>
+        <option value="member">member</option>
+        <option value="manager">manager</option>
+        {{#if (eq currentUser.role 'admin')}}
+          <option value="admin" {{selected user.role 'admin'}}>admin</option>
+        {{/if}}
+      </select>
+    </label>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">登録</button>
+      <a href="/companies/{{companyId}}/settings/users" class="btn-subtle">← ユーザー一覧へ</a>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,39 @@
+{{!-- ユーザー管理 メニュー --}}
+{{#section "title"}}
+  <title>ユーザー管理</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/admin-menu.css">
+{{/section}}
+<section class="admin-menu">
+  <div class="page-title">
+      <h1>{{title}}</h1>
+      <a class="back-btn" href="/menu">← 戻る</a>
+    </div>
+
+    <div class="admin-menu__grid">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="btn" href="/admin/companies/{{company.id}}/users/new">ユーザー登録</a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>氏名</th><th>メール</th><th>ロール</th><th>状態</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.email}}</td>
+          <td>{{this.role}}</td>
+          <td>{{#if this.is_active}}有効{{else}}無効{{/if}}</td>
+          <td class="actions">
+            <a class="btn-subtle" href="/admin/companies/{{../company.id}}/users/{{this.id}}/edit">編集</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</section>

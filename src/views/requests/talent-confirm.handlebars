@@ -1,0 +1,52 @@
+{{#section "title"}}
+  <title>要員リクエスト 内容確認</title>
+{{/section}}
+
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/request-form.css">
+{{/section}}
+
+<section class="tl-section">
+
+  <div class="page-title">
+    <h1>要員リクエスト 内容確認</h1>
+  </div>
+
+  <div class="request-form">
+
+    <!-- 案件名 -->
+    <div class="form-group">
+      <label class="form-label">案件名</label>
+      <div class="form-preview" style="white-space:normal">{{requestTitle}}</div>
+    </div>
+
+    <!-- 送信内容 -->
+    <div class="form-group">
+      <label class="form-label">送信内容</label>
+      <pre class="form-preview">{{message}}</pre>
+    </div>
+
+    <!-- アクション -->
+    <div class="form-actions">
+      {{!-- 修正して戻る --}}
+      <form method="post" action="/companies/{{companyId}}/requests/new?talent_id={{talentId}}" style="display:inline;">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="talent_id" value="{{talentId}}">
+        <input type="hidden" name="request_title" value="{{requestTitle}}">
+        <input type="hidden" name="message_text" value="{{message}}">
+        <button type="submit" class="btn-ghost">修正する</button>
+      </form>
+
+      {{!-- このまま送信 --}}
+      <form method="post" action="/companies/{{companyId}}/requests" style="display:inline;">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="talent_id" value="{{talentId}}">
+        <input type="hidden" name="request_title" value="{{requestTitle}}">
+        <input type="hidden" name="message_text" value="{{message}}">
+        <button type="submit" class="btn-primary">この内容で送信する</button>
+      </form>
+    </div>
+
+  </div>
+
+</section>

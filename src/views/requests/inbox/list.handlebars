@@ -1,0 +1,93 @@
+{{#section "title"}}
+  <title>受信リクエスト</title>
+{{/section}}
+
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/request-index.css">
+{{/section}}
+
+<section class="tl-section">
+
+  <div class="page-title">
+    <h1>受信リクエスト</h1>
+    <a class="back-btn" href="/menu">← メニューへ</a>
+  </div>
+
+  <!-- ステータス検索フォーム -->
+  <form method="get" class="filter-form" style="margin-bottom:16px;">
+    <label for="status" style="margin-right:8px;">ステータス：</label>
+    <select name="status" id="status" class="tl-select" style="min-width:160px;">
+      <option value="all" {{#ifeq currentStatus "all"}}selected{{/ifeq}}>すべて</option>
+      <option value="pending"  {{#ifeq currentStatus "pending"}}selected{{/ifeq}}>承認待ち</option>
+      <option value="accepted" {{#ifeq currentStatus "accepted"}}selected{{/ifeq}}>承諾</option>
+      <option value="declined" {{#ifeq currentStatus "declined"}}selected{{/ifeq}}>辞退</option>
+      <option value="cancelled" {{#ifeq currentStatus "cancelled"}}selected{{/ifeq}}>取り下げ</option>
+    </select>
+    <button class="f-btn f-btn--primary" type="submit">絞り込み</button>
+  </form>
+
+  {{#if items.length}}
+    <table class="req-table">
+      <thead>
+        <tr>
+          <th class="col-title">案件名</th>
+          <th>本名</th>
+          <th>単価</th>
+          <th>都道府県</th>
+          <th>ステータス</th>
+          <th>要員詳細</th>
+          <th>案件詳細</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+          <tr>
+            <td class="col-title">{{this.request_title}}</td>
+            <td>{{this.name}}</td>
+            <td>
+              {{#if this.desired_rate}}
+                {{this.desired_rate}}万
+              {{else}}-{{/if}}
+            </td>
+            <td>{{this.prefecture}}</td>
+            <td class="status-{{this.status}}">
+              {{#if (eq this.status "pending")}}承認待ち
+              {{else if (eq this.status "accepted")}}承諾
+              {{else if (eq this.status "declined")}}辞退
+              {{else if (eq this.status "cancelled")}}取り下げ
+              {{else}}{{this.status}}{{/if}}
+            </td>
+            <td>
+              <a
+                class="btn-ghost"
+                href="/companies/{{../companyId}}/settings/talents/{{this.talent_id}}/edit"
+                target="_blank" rel="noopener noreferrer"
+              >
+                要員詳細
+              </a>
+            </td>
+            <td>
+              <a class="btn-primary" href="/companies/{{../companyId}}/requests/inbox/{{this.id}}">
+                詳細
+              </a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>受信中のリクエストはありません。</p>
+  {{/if}}
+
+  {{#if lastPage}}
+    <nav class="pager">
+      {{#each (range 1 lastPage)}}
+        <a
+          class="pager__item {{#if (eq this ../page)}}is-active{{/if}}"
+          href="?status={{../currentStatus}}&p={{this}}">
+          {{this}}
+        </a>
+      {{/each}}
+    </nav>
+  {{/if}}
+</section>

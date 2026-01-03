@@ -1,0 +1,119 @@
+{{#section "title"}}
+  <title>自社要員一覧</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/talents-list.css">
+{{/section}}
+{{#section "js"}}
+  <script src="/public/js/confirm.js" defer></script>
+{{/section}}
+
+<section class="tl-section">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/menu">← メニューへ</a>
+  </div>
+
+  <!-- フィルター -->
+  <form class="filter-bar" method="GET" action="/companies/{{companyId}}/settings/talents">
+    <div class="filters">
+      <input class="f-input" type="text" name="name" placeholder="名前で検索"
+             value="{{q.name}}">
+
+      <input class="f-input" type="text" name="summary" placeholder="サマリ部分一致"
+             value="{{q.summary}}">
+
+      <input class="f-input f-input--num" type="number" name="maxAge" min="0" step="1"
+             placeholder="年齢（以下）" value="{{q.maxAge}}">
+
+      <input class="f-input f-input--num" type="number" name="maxDesiredRate" min="0" step="1"
+             placeholder="単価（以下）" value="{{q.maxDesiredRate}}">
+
+      <input class="f-input" type="text" name="prefecture" placeholder="都道府県"
+             value="{{q.prefecture}}">
+
+      <select class="f-select" name="status">
+        <option value="">ステータス：すべて</option>
+        <option value="marketing" {{selected q.status "marketing"}}>営業中</option>
+        <option value="interview" {{selected q.status "interview"}}>面談あり</option>
+        <option value="working" {{selected q.status "working"}}>稼働中</option>
+        <option value="left" {{selected q.status "left"}}>離脱</option>
+      </select>
+
+      <button class="f-btn f-btn--primary" type="submit">絞り込み</button>
+      <a class="f-btn" href="/companies/{{companyId}}/settings/talents">リセット</a>
+      <a class="f-btn f-btn--create" href="/companies/{{companyId}}/settings/talents/new">新規登録</a>
+    </div>
+  </form>
+
+  <!-- テーブル -->
+  <div class="table-wrap">
+    <table class="tl-table">
+      <thead>
+        <tr>
+          <th class="col-name">名前</th>
+          <th class="col-age">年齢</th>
+          <th class="col-rate">単価</th>
+          <th class="col-pref">都道府県</th>
+          <th class="col-status">ステータス</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#if items.length}}
+          {{#each items}}
+            <tr>
+              <td class="col-name">
+                <div class="nm">
+                  <span class="nm-main">{{this.name}}</span>
+                  {{#if this.internal_name}}
+                    <span class="nm-sub">（{{this.internal_name}}）</span>
+                  {{/if}}
+                </div>
+              </td>
+
+              <td class="col-age">
+                {{#if this.age}}{{this.age}}{{else}}—{{/if}}
+              </td>
+
+              <td class="col-rate">
+                {{#if this.desired_rate}}{{this.desired_rate}} 万円{{else}}—{{/if}}
+              </td>
+
+              <td class="col-pref">
+                {{#if this.prefecture}}{{this.prefecture}}{{else}}—{{/if}}
+              </td>
+
+              <td class="col-status">
+                {{#ifeq this.status "marketing"}}<span class="badge badge--green">営業中</span>{{/ifeq}}
+                {{#ifeq this.status "interview"}}<span class="badge badge--blue">面談あり</span>{{/ifeq}}
+                {{#ifeq this.status "working"}}<span class="badge badge--purple">稼働中</span>{{/ifeq}}
+                {{#ifeq this.status "left"}}<span class="badge badge--gray">離脱</span>{{/ifeq}}
+              </td>
+
+              <td class="col-actions">
+                <a class="action-btn action-btn--edit"
+                   href="/companies/{{../companyId}}/settings/talents/{{this.id}}/edit?back={{../backEnc}}">
+                  編集
+                </a>
+
+                <form class="inline"
+                      method="POST"
+                      action="/companies/{{../companyId}}/settings/talents/{{this.id}}/delete"
+                      data-confirm="削除してよろしいですか？">
+                  <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                  <input type="hidden" name="back" value="{{../backEnc}}">
+                  <button class="action-btn action-btn--danger" type="submit">削除</button>
+                </form>
+              </td>
+            </tr>
+          {{/each}}
+        {{else}}
+          <tr>
+            <td colspan="6" class="empty">該当する要員はいません。</td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+</section>

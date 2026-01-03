@@ -1,0 +1,127 @@
+{{#section "title"}}
+  <title>グローバル要員検索</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/talents-list.css">
+{{/section}}
+{{#section "js"}}
+  {{!-- 今回は削除等がないので confirm.js は読み込まない。必要になったら追加OK --}}
+{{/section}}
+
+<section class="tl-section">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/menu">← メニューへ</a>
+  </div>
+
+  <!-- フィルター（グローバル検索） -->
+  <form class="filter-bar" method="GET" action="/search/talents">
+    <div class="filters">
+      <input
+        class="f-input f-input--num"
+        type="number" name="ageMax" min="0" step="1"
+        placeholder="年齢（以下）"
+        value="{{filters.ageMax}}">
+
+      <input
+        class="f-input f-input--num"
+        type="number" name="priceMin" min="0" step="1"
+        placeholder="単価（下限）"
+        value="{{filters.priceMin}}">
+
+      <input
+        class="f-input f-input--num"
+        type="number" name="priceMax" min="0" step="1"
+        placeholder="単価（上限）"
+        value="{{filters.priceMax}}">
+
+      <input
+        class="f-input"
+        type="text" name="prefecture"
+        placeholder="都道府県（例：沖縄県）"
+        value="{{filters.prefecture}}">
+
+      <select class="f-select" name="workStyleMax">
+        <option value="">稼働スタイル</option>
+        <option value="2" {{selected filters.workStyleMax "2"}}>ハイブリッド可能</option>
+        <option value="3" {{selected filters.workStyleMax "3"}}>常駐可能</option>
+      </select>
+
+      <input
+        class="f-input"
+        type="text" name="summaryQ"
+        placeholder="サマリ（部分一致）"
+        value="{{filters.summaryQ}}">
+
+      <button class="f-btn f-btn--primary" type="submit">絞り込み</button>
+      <a class="f-btn" href="/search/talents">リセット</a>
+      {{!-- グローバル検索は新規登録を出さない --}}
+    </div>
+  </form>
+
+  <!-- テーブル -->
+  <div class="table-wrap">
+    <table class="tl-table">
+      <thead>
+        <tr>
+          <th class="col-name">イニシャル</th>
+          <th class="col-age">年齢</th>
+          <th class="col-rate">単価</th>
+          <th class="col-pref">都道府県</th>
+          <th class="col-status">働き方</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#if results.length}}
+          {{#each results}}
+            <tr>
+              <td class="col-name">
+                <div class="nm">
+                  <span class="nm-main">{{this.internal_name}}</span>
+                </div>
+              </td>
+
+              <td class="col-age">
+                {{#if this.age}}{{this.age}}{{else}}—{{/if}}
+              </td>
+
+              <td class="col-rate">
+                {{#if this.unit_price}}{{this.unit_price}} 万円{{else}}—{{/if}}
+              </td>
+
+              <td class="col-pref">
+                {{#if this.prefecture}}{{this.prefecture}}{{else}}—{{/if}}
+              </td>
+
+              <td class="col-status">
+                {{workStyleLabel this.work_style_level}}
+              </td>
+
+              <td class="col-actions">
+                <a class="action-btn action-btn--edit" href="/talents/{{this.id}}?back={{../backEnc}}">詳細</a>
+              </td>
+            </tr>
+          {{/each}}
+        {{else}}
+          <tr>
+            <td colspan="6" class="empty">該当する要員はいません。</td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+
+  {{!-- ページネーション（必要なら有効化） --}}
+  {{#if pages}}
+    <nav class="pager">
+      {{#each (range 1 pages)}}
+        <a
+          class="pager__item {{#if (eq this ../page)}}is-active{{/if}}"
+          href="/search/talents?ageMax={{../filters.ageMax}}&priceMin={{../filters.priceMin}}&priceMax={{../filters.priceMax}}&prefecture={{../filters.prefecture}}&workStyleMax={{../filters.workStyleMax}}&summaryQ={{../filters.summaryQ}}&page={{this}}&size={{../size}}">
+          {{this}}
+        </a>
+      {{/each}}
+    </nav>
+  {{/if}}
+</section>

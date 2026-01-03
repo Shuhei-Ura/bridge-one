@@ -1,0 +1,27 @@
+.flash {
+  margin: 0 auto 16px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  max-width: 900px;
+  text-align: center;
+}
+
+.flash-success {
+  background: #e8f7e8;
+  border: 1px solid #6abf69;
+  color: #2d6a2d;
+}
+
+/* ★ 警告（ここが今回重要） */
+.flash-warning {
+  background: #fff4d6;
+  border: 1px solid #e6a100;
+  color: #9c6a00;
+}
+
+.flash-error {
+  background: #fdecec;
+  border: 1px solid #d14b4b;
+  color: #8a2a2a;
+}

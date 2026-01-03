@@ -1,0 +1,248 @@
+-- =========================================
+-- DB: Bridge-One  作成 & 使用
+-- =========================================
+CREATE DATABASE IF NOT EXISTS `Bridge-One`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
+USE `Bridge-One`;
+
+-- 安全のため（InnoDB＋FK前提）
+SET sql_notes = 0;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- =========================================
+-- companies（会社）
+--  company_type: 'ses' or 'end'
+-- =========================================
+CREATE TABLE IF NOT EXISTS companies (
+  id            BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name          VARCHAR(255) NOT NULL,
+  domain        VARCHAR(255),
+  company_type  ENUM('ses','end') NOT NULL DEFAULT 'ses',
+  is_active     TINYINT(1) NOT NULL DEFAULT 1,
+  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_companies_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- =========================================
+-- users（担当者／ログインユーザー）
+-- =========================================
+CREATE TABLE IF NOT EXISTS users (
+  id            BIGINT PRIMARY KEY AUTO_INCREMENT,
+  company_id    BIGINT NOT NULL,
+  name          VARCHAR(255) NOT NULL,
+  email         VARCHAR(255) NOT NULL,
+  role          ENUM('admin','member') NOT NULL DEFAULT 'member',
+  is_active     TINYINT(1) NOT NULL DEFAULT 1,
+  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_users_email (email),
+  KEY idx_users_company (company_id),
+  CONSTRAINT fk_users_company FOREIGN KEY (company_id) REFERENCES companies(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE users
+  MODIFY role ENUM('admin', 'manager', 'member')
+  NOT NULL
+  DEFAULT 'member';
+
+-- =========================================
+-- talents（要員：各社が自社要員のみ登録）
+-- =========================================
+CREATE TABLE IF NOT EXISTS talents (
+  id                BIGINT PRIMARY KEY AUTO_INCREMENT,
+  company_id        BIGINT NOT NULL,                       -- 登録元会社（非公開）
+  internal_name     VARCHAR(255) NOT NULL,                 -- 非公開識別名
+  age_band          ENUM('20_early','20_late','30_early','30_late','40_early','40_late','50_plus') NOT NULL,
+  price_range       VARCHAR(50) NOT NULL,                  -- 例 '55-60'
+  role              VARCHAR(100) NOT NULL,                 -- 'Backend','PM','QA' など
+  prefecture        VARCHAR(50) NOT NULL,
+  area              VARCHAR(100),
+  work_style        ENUM('onsite','remote','hybrid') NOT NULL,
+  available_from    DATE,
+  summary_text      TEXT,                                  -- 経歴・スキルまとめ（全文検索）
+  skill_sheet_url   TEXT NOT NULL,                         -- Drive等のURL
+  is_active         TINYINT(1) NOT NULL DEFAULT 1,
+  created_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_talents_company (company_id),
+  KEY idx_talents_role_pref (role, prefecture),
+  KEY idx_talents_available (available_from),
+  FULLTEXT KEY ftx_talents_summary (summary_text),
+  CONSTRAINT fk_talents_company FOREIGN KEY (company_id) REFERENCES companies(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE talents
+ADD COLUMN age INT NULL AFTER internal_name;
+
+ALTER TABLE talents
+DROP COLUMN age_band;
+
+ALTER TABLE talents
+  ADD COLUMN hope VARCHAR(255) NULL AFTER role;  -- AFTER はお好みで
+
+
+ALTER TABLE talents
+  ADD COLUMN name VARCHAR(100) NULL
+  AFTER company_id;
+
+
+ALTER TABLE talents
+  ADD COLUMN status ENUM('marketing','interview','working','left')
+  NOT NULL DEFAULT 'marketing'
+  AFTER is_active;
+
+UPDATE talents
+  SET status = CASE
+    WHEN is_active = 1 THEN 'marketing'
+    ELSE 'left'
+  END;
+
+
+ALTER TABLE talents
+  DROP COLUMN is_active;
+
+  ALTER TABLE talents
+  ADD COLUMN skill_sheet_file_path VARCHAR(512) NULL AFTER skill_sheet_url,
+  ADD COLUMN portfolio_file_path   VARCHAR(512) NULL AFTER skill_sheet_file_path;
+
+ALTER TABLE talents
+ADD COLUMN skill_sheet_pdf_path varchar(255) NULL AFTER skill_sheet_file_path,
+ADD COLUMN portfolio_pdf_path varchar(255) NULL AFTER portfolio_file_path;
+
+CREATE INDEX idx_talents_status ON talents(status);
+
+
+
+
+
+-- =========================================
+-- opportunities（案件：エンド企業のみ登録可※アプリ層でチェック）
+-- =========================================
+CREATE TABLE IF NOT EXISTS opportunities (
+  id               BIGINT PRIMARY KEY AUTO_INCREMENT,
+  company_id       BIGINT NOT NULL,                      -- 登録企業（= エンド）
+  title            VARCHAR(200) NOT NULL,
+  summary          VARCHAR(1000) NOT NULL,
+  role             VARCHAR(100) NOT NULL,
+  prefecture       VARCHAR(50),
+  work_style       ENUM('onsite','remote','hybrid') NOT NULL,
+  start_date       DATE,
+  end_date         DATE,
+  price_range      VARCHAR(50),
+  contract_type    ENUM('outsourcing','dispatch','subcontract','other') DEFAULT 'outsourcing',
+  is_active        TINYINT(1) NOT NULL DEFAULT 1,
+  created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_opp_company (company_id, is_active),
+  KEY idx_opp_search (role, prefecture, work_style, start_date),
+  FULLTEXT KEY ftx_opp_summary (summary),
+  CONSTRAINT fk_opp_company FOREIGN KEY (company_id) REFERENCES companies(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE opportunities
+ADD COLUMN max_age INT NULL AFTER role;
+
+ALTER TABLE opportunities
+DROP COLUMN contract_type;
+
+-- =========================================
+-- talent_requests（要員宛リクエスト：SESもENDも送信可）
+-- =========================================
+CREATE TABLE IF NOT EXISTS talent_requests (
+  id               BIGINT PRIMARY KEY AUTO_INCREMENT,
+  from_company_id  BIGINT NOT NULL,      -- SES or END
+  from_user_id     BIGINT NOT NULL,
+  to_company_id    BIGINT NOT NULL,      -- talents.company_id（トリガで自動セット）
+  talent_id        BIGINT NOT NULL,      -- 宛先要員
+  message_text     TEXT NOT NULL,        -- 案件説明など自由文
+  status           ENUM('pending','accepted','declined','expired') NOT NULL DEFAULT 'pending',
+  created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tr_from (from_company_id, status, created_at),
+  KEY idx_tr_to   (to_company_id,   status, created_at),
+  KEY idx_tr_talent (talent_id),
+  CONSTRAINT fk_tr_from_company FOREIGN KEY (from_company_id) REFERENCES companies(id),
+  CONSTRAINT fk_tr_from_user    FOREIGN KEY (from_user_id)    REFERENCES users(id),
+  CONSTRAINT fk_tr_to_company   FOREIGN KEY (to_company_id)    REFERENCES companies(id),
+  CONSTRAINT fk_tr_talent       FOREIGN KEY (talent_id)        REFERENCES talents(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+-- =========================================
+-- opportunity_requests（案件宛リクエスト：SESのみ送信可）
+-- =========================================
+CREATE TABLE IF NOT EXISTS opportunity_requests (
+  id                 BIGINT PRIMARY KEY AUTO_INCREMENT,
+  from_company_id    BIGINT NOT NULL,     -- SESのみ
+  from_user_id       BIGINT NOT NULL,
+  to_company_id      BIGINT NOT NULL,     -- opportunities.company_id（=エンド）トリガで自動
+  opportunity_id     BIGINT NOT NULL,     -- 宛先案件（エンド所有）
+  offered_talent_id  BIGINT NOT NULL,     -- 提案する自社要員（from_company所属）
+  message_text       TEXT NOT NULL,       -- 提案コメント
+  status             ENUM('pending','accepted','declined','expired') NOT NULL DEFAULT 'pending',
+  created_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_or_from (from_company_id, status, created_at),
+  KEY idx_or_to   (to_company_id,   status, created_at),
+  KEY idx_or_opp  (opportunity_id),
+  KEY idx_or_offered (offered_talent_id),
+  CONSTRAINT fk_or_from_company      FOREIGN KEY (from_company_id)     REFERENCES companies(id),
+  CONSTRAINT fk_or_from_user         FOREIGN KEY (from_user_id)        REFERENCES users(id),
+  CONSTRAINT fk_or_to_company        FOREIGN KEY (to_company_id)        REFERENCES companies(id),
+  CONSTRAINT fk_or_opportunity       FOREIGN KEY (opportunity_id)      REFERENCES opportunities(id),
+  CONSTRAINT fk_or_offered_talent    FOREIGN KEY (offered_talent_id)   REFERENCES talents(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+SET FOREIGN_KEY_CHECKS = 1;
+SET sql_notes = 1;
+
+-- =========================================
+-- TRIGGERS（改ざん防止＆ビジネスルール強制）
+-- =========================================
+DELIMITER //
+
+-- talent_requests: 宛先会社を要員から自動設定（SES/ENDどちらからでも送信可）
+CREATE TRIGGER trg_tr_set_to_company
+BEFORE INSERT ON talent_requests
+FOR EACH ROW
+BEGIN
+  SET NEW.to_company_id = (
+    SELECT company_id FROM talents WHERE id = NEW.talent_id
+  );
+
+  -- （任意）自社要員に自社から送るのを禁止したい場合は以下を有効化
+  -- IF NEW.to_company_id = NEW.from_company_id THEN
+  --   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'cannot send to your own talent';
+  -- END IF;
+END//
+-- UPDATE時も守りたい場合はBEFORE UPDATE版も同様に追加可能
+
+-- opportunity_requests: 宛先＝案件の会社（END）に自動設定／送信元はSES限定／提案人材は自社所属のみ
+CREATE TRIGGER trg_or_guard
+BEFORE INSERT ON opportunity_requests
+FOR EACH ROW
+BEGIN
+  -- 宛先会社を案件から自動設定
+  SET NEW.to_company_id = (
+    SELECT company_id FROM opportunities WHERE id = NEW.opportunity_id
+  );
+
+  -- 宛先はENDのみ
+  IF (SELECT company_type FROM companies WHERE id = NEW.to_company_id) <> 'end' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'opportunity must belong to END company';
+  END IF;
+
+  -- 送信元はSESのみ
+  IF (SELECT company_type FROM companies WHERE id = NEW.from_company_id) <> 'ses' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'only SES can send opportunity requests';
+  END IF;
+
+  -- 提案要員は送信元SESの所属のみ
+  IF (SELECT company_id FROM talents WHERE id = NEW.offered_talent_id) <> NEW.from_company_id THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'offered_talent must belong to from_company';
+  END IF;
+END//
+DELIMITER ;

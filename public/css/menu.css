@@ -1,0 +1,172 @@
+/* ===== メニュー（デスクトップ専用） ===== */
+
+/* ベース */
+:root{
+  --brand-navy:#0f2747;
+  --brand-navy-2:#1a3763;
+  --brand-orange:#ff7a1a;
+  --ink:#1c1d20;
+  --muted:#6b7280;
+  --line:#e6e8ec;
+  --bg:#f7f8fb;
+  --card:#ffffff;
+  --shadow:0 8px 24px rgba(16,24,40,.08);
+  --radius:16px;
+}
+
+.menu-page{
+  padding: 28px 8px 40px;
+  background: var(--bg);
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+}
+
+/* ヘッダ */
+.menu-header{
+  max-width: 1280px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.menu-title{
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--brand-navy);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.badge-admin{
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--brand-orange);
+  color: #fff;
+}
+.menu-meta{
+  display: flex;
+  gap: 8px;
+}
+.pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--brand-navy-2);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.pill-user{
+  background:#3b4760;
+}
+
+/* グリッド（デスクトップ固定幅） */
+.menu-grid{
+  max-width: 1280px;
+  margin: 12px auto 24px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* カード */
+.menu-card{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 18px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.menu-card:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: #d7dbe3;
+}
+.menu-card:focus{
+  outline: 3px solid rgba(255,122,26,.35);
+  outline-offset: 2px;
+}
+
+/* カード中身 */
+.menu-card__body{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.menu-card__icon{
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand-navy) 0%, #2a4a80 100%);
+  position: relative;
+  flex: 0 0 auto;
+}
+/* 擬似アイコン（＋を斜めにした簡易） */
+.menu-card__icon::before,
+.menu-card__icon::after{
+  content:"";
+  position:absolute;
+  inset: 50% auto auto 50%;
+  width: 20px; height: 3px;
+  background: #fff;
+  transform-origin: left center;
+}
+.menu-card__icon::before{ transform: translate(-50%, -50%) rotate(0deg); }
+.menu-card__icon::after{  transform: translate(-50%, -50%) rotate(90deg); }
+
+.menu-card__label{
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+/* 右端チートロン */
+.menu-card__chevron{
+  font-size: 28px;
+  line-height: 1;
+  color: var(--muted);
+  transform: translateX(0);
+  transition: transform .12s ease, color .12s ease;
+}
+.menu-card:hover .menu-card__chevron{
+  color: var(--brand-orange);
+  transform: translateX(2px);
+}
+
+/* フッタ */
+.menu-footer{
+  max-width: 1280px;
+  margin: 8px auto 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-logout{
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow .12s ease, transform .12s ease, border-color .12s ease;
+}
+.btn-logout:hover{
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+  border-color:#d7dbe3;
+}

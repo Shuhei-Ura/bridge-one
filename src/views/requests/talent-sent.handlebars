@@ -1,0 +1,73 @@
+{{#section "title"}}
+  <title>送信済みリクエスト</title>
+{{/section}}
+
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/request-index.css">
+{{/section}}
+
+<section class="tl-section">
+
+  <div class="page-title">
+    <h1>送信済みリクエスト</h1>
+    <a class="back-btn" href="/menu">← メニューへ</a>
+  </div>
+
+  <!-- ステータス検索フォーム -->
+  <form method="get" class="filter-form" style="margin-bottom:16px;">
+    <label for="status" style="margin-right:8px;">ステータス：</label>
+    <select name="status" id="status" class="tl-select" style="min-width:160px;">
+      <option value="">すべて</option>
+      <option value="pending" {{#ifeq selectedStatus "pending"}}selected{{/ifeq}}>承認待ち</option>
+      <option value="approved" {{#ifeq selectedStatus "approved"}}selected{{/ifeq}}>承諾</option>
+      <option value="rejected" {{#ifeq selectedStatus "rejected"}}selected{{/ifeq}}>辞退</option>
+      <option value="expired" {{#ifeq selectedStatus "expired"}}selected{{/ifeq}}>取り下げ</option>
+    </select>
+    <button class="f-btn f-btn--primary" type="submit">絞り込み</button>
+  </form>
+
+  {{#if requests.length}}
+    <table class="req-table">
+      <thead>
+        <tr>
+          <th class="col-title">案件名</th>
+          <th>要員</th>          {{!-- イニシャル表示 --}}
+          <th>単価</th>
+          <th>都道府県</th>
+          <th>ステータス</th>
+          <th>案件詳細</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each requests}}
+          <tr>
+            <td class="col-title">{{this.request_title}}</td>
+            <td>{{this.talent.internal_name}}</td>
+            <td>{{this.talent.desired_rate}}万</td>
+            <td>{{this.talent.prefecture}}</td>
+            <td class="status-{{this.status}}">{{statusLabel this.status}}</td>
+            <td>
+              <a class="btn-primary" href="/companies/{{../companyId}}/requests/sent/{{this.id}}">
+                詳細と編集
+              </a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>まだ送信したリクエストはありません。</p>
+  {{/if}}
+
+  {{#if pages}}
+    <nav class="pager">
+      {{#each (range 1 pages)}}
+        <a
+          class="pager__item {{#if (eq this ../page)}}is-active{{/if}}"
+          href="?status={{../selectedStatus}}&page={{this}}">
+          {{this}}
+        </a>
+      {{/each}}
+    </nav>
+  {{/if}}
+</section>

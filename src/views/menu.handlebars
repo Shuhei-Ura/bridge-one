@@ -1,0 +1,49 @@
+{{#section "title"}}
+  <title>メニュー</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/menu.css">
+{{/section}}
+
+<section class="menu-page">
+  <header class="menu-header">
+    <h1 class="menu-title">
+      メニュー
+      {{#if (eq role "admin")}}
+        <span class="badge-admin" title="管理者モード">ADMIN</span>
+      {{/if}}
+    </h1>
+    <div class="menu-meta">
+      <span class="pill pill-company">
+        {{#if (eq company "ses")}}SES 企業{{/if}}
+        {{#if (eq company "end")}}エンド企業{{/if}}
+        {{#unless company}}会社種別未設定{{/unless}}
+      </span>
+      {{#if currentUser}}
+        <span class="pill pill-user">{{currentUser.name}}（{{currentUser.email}}）</span>
+      {{/if}}
+    </div>
+  </header>
+
+  <div class="menu-grid">
+    {{#each items}}
+      <a class="menu-card" href="{{this.href}}">
+        <div class="menu-card__body">
+          <div class="menu-card__icon" aria-hidden="true">
+            {{!-- 簡易アイコン（CSSで背景） --}}
+          </div>
+          <div class="menu-card__label">{{this.label}}</div>
+        </div>
+        <div class="menu-card__chevron" aria-hidden="true">›</div>
+      </a>
+    {{/each}}
+  </div>
+
+  <footer class="menu-footer">
+    <form action="/auth/logout" method="POST">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <button type="submit" class="btn-logout">ログアウト</button>
+    </form>
+  </footer>
+</section>
+

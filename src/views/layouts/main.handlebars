@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/css/flash-messages.css">
+  {{{_sections.title}}}   <!-- ← title用のsection -->
+  {{{_sections.css}}}     <!-- ← ページごとのCSSを注入 -->
+  {{{_sections.js}}}   <!-- ページごとのjs -->
+</head>
+<body>
+  <main>
+    {{> flash-messages}}   {{!-- 追加 --}}
+    {{{body}}}
+  </main>
+</body>
+</html>

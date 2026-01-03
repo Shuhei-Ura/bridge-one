@@ -1,0 +1,29 @@
+{{!-- 企業管理 メニュー --}}
+{{#section "title"}}
+  <title>企業管理</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/admin-menu.css">
+{{/section}}
+<section class="admin-menu">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/menu">← 戻る</a>
+  </div>
+
+  <div class="admin-menu__grid">
+    <a class="admin-menu__item" href="/admin/companies/list">
+      <span class="admin-menu__icon" aria-hidden="true">🏢</span>
+      <span class="admin-menu__label">一覧</span>
+      <span class="admin-menu__chev" aria-hidden="true">›</span>
+    </a>
+
+    <a class="admin-menu__item" href="/admin/companies/new">
+      <span class="admin-menu__icon" aria-hidden="true">➕</span>
+      <span class="admin-menu__label">新規登録</span>
+      <span class="admin-menu__chev" aria-hidden="true">›</span>
+    </a>
+  </div>
+
+  <p class="admin-menu__note">※ 削除はソフトデリート（無効化）です。</p>
+</section>

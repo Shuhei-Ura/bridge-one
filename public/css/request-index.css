@@ -1,0 +1,131 @@
+/* 最大幅・余白 */
+.tl-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.page-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:10px 0 16px;
+}
+.page-title h1{ font-size:22px; font-weight:700; margin:0; }
+.back-btn{
+  display:inline-block;
+  padding:8px 12px;
+  border:1px solid #d0d5dd;
+  border-radius:8px;
+  background:#fff;
+  font-size:14px;
+  line-height:1;
+  text-decoration:none;
+  cursor:pointer;
+  transition:box-shadow .15s ease, transform .05s ease;
+}
+.back-btn:hover{ box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.back-btn:active{ transform:translateY(1px); }
+
+/* テーブル */
+.req-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.req-table th,
+.req-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.req-table th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #444;
+  border-bottom: 2px solid #ddd;
+}
+
+/* 行ホバー */
+.req-table tbody tr:hover {
+  background: #f7faff;
+}
+
+/* ステータス色（リクエスト状況に応じて視覚差を付ける） */
+.status-pending {
+  color: #007aff;
+  font-weight: 600;
+}
+.status-accepted {
+  color: #1b9a59;
+  font-weight: 600;
+}
+.status-declined {
+  color: #cc3737;
+  font-weight: 600;
+}
+.status-expired {
+  color: #888;
+  font-weight: 600;
+}
+
+/* フッターアクションなどあれば */
+.req-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-primary {
+  background: #007aff;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+/* 案件名カラムを広めに設定 */
+.req-table th.col-title,
+.req-table td.col-title {
+  width: 50%;
+  max-width: 500px;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* ステータスが目立つように軽く色づけ */
+.status-pending { color: #d69e00; font-weight: 600; }
+.status-accepted { color: #0a7a24; font-weight: 600; }
+.status-declined { color: #b91c1c; font-weight: 600; }
+.status-expired  { color: #666; font-weight: 600; }
+
+.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.filter-form select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.f-btn {
+  height:36px; padding:0 14px; border-radius:10px; background:#f3f5fb; border:1px solid #e1e6f2;
+  font-size:14px; color:#334155; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center;
+}
+.f-btn:hover { background:#ebeff9; }
+.f-btn--primary { background:#111827; color:#fff; border-color:#111827; }
+.f-btn--primary:hover { background:#0b0f1a; }
+.f-btn--create { background:#233876; color:#fff; border-color:#233876; }
+.f-btn--create:hover { background:#1b2d61; }

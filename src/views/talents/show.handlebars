@@ -1,0 +1,129 @@
+{{#section "title"}}
+  <title>要員詳細</title>
+{{/section}}
+{{#section "css"}}
+ <link rel="stylesheet" href="/public/css/talents-form.css">
+{{/section}}
+
+<section class="tl-section">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="{{#if back}}{{back}}{{else}}/search/talents{{/if}}">← 検索画面へ</a>
+  </div>
+
+  <!-- プロフィール（閲覧専用） -->
+  <div class="tl-card">
+    <div class="tl-card__header">プロフィール</div>
+    <div class="tl-grid tl-grid--4">
+      <div class="tl-field">
+        <label class="tl-label">イニシャル（外部表示名）</label>
+        <div class="tl-readonly">{{talent.internal_name}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">年齢</label>
+        <div class="tl-readonly">{{#if talent.age}}{{talent.age}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">役割</label>
+        <div class="tl-readonly">{{#if talent.role}}{{talent.role}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">都道府県</label>
+        <div class="tl-readonly">{{#if talent.prefecture}}{{talent.prefecture}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">エリア</label>
+        <div class="tl-readonly">
+          {{#if talent.area}}{{talent.area}}{{else}}—{{/if}}
+        </div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">希望単価</label>
+        <div class="tl-readonly">{{#if talent.desired_rate}}{{talent.desired_rate}} 万円{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">稼働スタイル</label>
+        <div class="tl-readonly">{{workStyleLabel talent.work_style_level}}</div>
+      </div>
+
+      <div class="tl-field">
+        <label class="tl-label">稼働開始日</label>
+        <div class="tl-readonly">{{#if talent.available_from}}{{talent.available_from}}{{else}}—{{/if}}</div>
+      </div>
+
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">サマリー</label>
+        <div class="tl-readonly">
+          {{#if talent.summary_text}}
+            {{{nl2br talent.summary_text}}}
+          {{else}}
+            —
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ドキュメント（URL/ファイルを全部表示） -->
+  <div class="tl-card">
+    <div class="tl-card__header">ドキュメント</div>
+    <div class="tl-grid tl-grid--2">
+
+      <!-- スキルシートURL -->
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">スキルシートURL</label>
+        {{#if talent.skill_sheet_url}}
+          <p class="tl-readonly">
+            <a href="{{talent.skill_sheet_url}}" target="_blank" rel="noopener noreferrer">
+              {{talent.skill_sheet_url}}
+            </a>
+          </p>
+        {{else}}
+          <p class="tl-note">URLは登録されていません。</p>
+        {{/if}}
+      </div>
+
+      <!-- スキルシート（PDF） -->
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">スキルシート（PDF）</label>
+        {{#if talent.skill_sheet_pdf_url}}
+          <div class="tl-actions" style="margin-top:8px;">
+            <a class="tl-btn" href="{{talent.skill_sheet_pdf_url}}" target="_blank" rel="noopener noreferrer">PDFを別タブで開く</a>
+          </div>
+        {{else}}
+          <p class="tl-note">PDFは登録されていません。</p>
+        {{/if}}
+      </div>
+
+      <!-- ポートフォリオ（PDF） -->
+      <div class="tl-field tl-field--full">
+        <label class="tl-label">ポートフォリオ（PDF）</label>
+        {{#if talent.portfolio_pdf_url}}
+          <div class="tl-actions" style="margin-top:8px;">
+            <a class="tl-btn" href="{{talent.portfolio_pdf_url}}" target="_blank" rel="noopener noreferrer">PDFを別タブで開く</a>
+          </div>
+        {{else}}
+          <p class="tl-note">PDFは登録されていません。</p>
+        {{/if}}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- アクション -->
+  <div class="tl-actions">
+    <a
+      class="tl-btn tl-btn--primary"
+      href="/companies/{{companyId}}/requests/new?talent_id={{talent.id}}">
+      この要員にリクエストを送る
+    </a>
+
+    <a class="tl-btn tl-btn--ghost" href="{{#if back}}{{back}}{{else}}/search/talents{{/if}}">← 検索画面へ</a>
+  </div>
+</section>

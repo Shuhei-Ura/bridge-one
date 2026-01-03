@@ -1,0 +1,45 @@
+{{#section "title"}}
+  <title>ユーザー編集</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/admin-crud.css">
+{{/section}}
+<section class="admin-form">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="btn-subtle" href="/admin/companies/{{company.id}}/users">← 戻る</a>
+  </div>
+
+  <form method="post" action="/admin/companies/{{company.id}}/users/{{user.id}}">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <p class="muted">所属会社：<b>{{company.name}}</b></p>
+
+    <label>氏名 <input type="text" name="name" value="{{user.name}}" required></label>
+    <label>メール <input type="email" name="email" value="{{user.email}}" required></label>
+
+    <label>パスワード（変更時のみ）
+      <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="72">
+    </label>
+    <label>パスワード（確認）
+      <input type="password" name="password_confirm" autocomplete="new-password" minlength="8" maxlength="72">
+    </label>
+
+    <label>ロール
+      <select name="role" required>
+        <option value="member" {{#ifeq user.role "member"}}selected{{/ifeq}}>member</option>
+        <option value="manager"  {{#ifeq user.role "manager"}}selected{{/ifeq}}>manager</option>
+        <option value="admin"  {{#ifeq user.role "admin"}}selected{{/ifeq}}>admin</option>
+      </select>
+    </label>
+
+    <div class="radio-group">
+      <label><input type="radio" name="is_active" value="1" {{#if user.is_active}}checked{{/if}}> 有効</label>
+      <label><input type="radio" name="is_active" value="0" {{#unless user.is_active}}checked{{/unless}}> 無効</label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">保存</button>
+      <a href="/admin/companies/{{company.id}}/users" class="btn-subtle">戻る</a>
+    </div>
+  </form>
+</section>

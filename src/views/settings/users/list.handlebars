@@ -1,0 +1,46 @@
+{{#section "title"}}
+  <title>ユーザー一覧</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/admin-crud.css">
+{{/section}}
+
+<section class="admin-list">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/menu">← メニューへ</a>
+  </div>
+
+  <form method="get" class="filter-bar">
+    <a class="btn-subtle" href="/companies/{{companyId}}/settings/users/new">新規登録</a>
+  </form>
+
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>氏名</th><th>メール</th><th>ロール</th><th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#if items.length}}
+        {{#each items}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.email}}</td>
+          <td>{{this.role}}</td>
+          <td class="actions">
+            <a class="btn" href="/companies/{{../companyId}}/settings/users/{{this.id}}/edit">編集</a>
+          </td>
+        </tr>
+        {{/each}}
+      {{else}}
+        <tr><td colspan="7" class="muted">該当データがありません</td></tr>
+      {{/if}}
+      </tbody>
+    </table>
+  </div>
+
+  {{> pagination}}
+</section>

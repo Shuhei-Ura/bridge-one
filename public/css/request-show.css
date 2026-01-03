@@ -1,0 +1,58 @@
+/* ===== 受信リクエスト詳細 専用スタイル ===== */
+
+.tl-section { max-width: 1200px; margin: 0 auto; padding: 12px; }
+.page-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:10px 0 16px;
+}
+.page-title h1{ font-size:22px; font-weight:700; margin:0; }
+.back-btn{
+  display:inline-block;
+  padding:8px 12px;
+  border:1px solid #d0d5dd;
+  border-radius:8px;
+  background:#fff;
+  font-size:14px;
+  line-height:1;
+  text-decoration:none;
+  cursor:pointer;
+  transition:box-shadow .15s ease, transform .05s ease;
+}
+.back-btn:hover{ box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.back-btn:active{ transform:translateY(1px); }
+
+.tl-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px; }
+.tl-card__header { font-weight: 700; padding: 10px 6px; border-bottom: 1px solid #f1f5f9; }
+
+.form-group { margin: 12px 6px; }
+.tl-label { display: block; font-size: 14px; color: #475569; margin-bottom: 6px; }
+.form-preview { padding: 10px 12px; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; }
+pre.form-preview { white-space: pre-wrap; word-break: break-word; }
+
+/* ステータス */
+.status-row { display: flex; align-items: center; gap: 10px; }
+.status-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 84px; padding: 6px 10px; border-radius: 999px;
+  font-weight: 600; font-size: 13px; background: #f2f3f5; color: #444; border: 1px solid #e5e7eb;
+}
+.status-badge.is-pending  { background: #fff7ed; color: #9a3412; border-color: #fed7aa; } /* 橙 */
+.status-badge.is-accepted { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; } /* 緑 */
+.status-badge.is-declined { background: #fef2f2; color: #991b1b; border-color: #fecaca; } /* 赤 */
+.status-badge.is-expired  { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; } /* 青紫 */
+
+/* メール表示 */
+.mail-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mail-link { font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+/* フッターボタン */
+.form-actions { display: flex; justify-content: flex-start; gap: 8px; }
+.btn-primary, .btn-ghost {
+  padding: 8px 12px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; font-weight: 600;
+}
+.btn-primary { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+.btn-ghost { background: #fff; color: #334155; }
+.btn-primary:active, .btn-ghost:active { transform: translateY(1px); }

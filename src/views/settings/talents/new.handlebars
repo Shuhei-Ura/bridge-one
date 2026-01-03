@@ -1,0 +1,148 @@
+{{#section "title"}}
+  <title>自社要員登録</title>
+{{/section}}
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/talents-form.css">
+{{/section}}
+
+<section class="tl-section">
+  <div class="page-title">
+    <h1>{{title}}</h1>
+    <a class="back-btn" href="/menu">← メニューへ</a>
+  </div>
+
+  <form class="tl-form" method="POST" action="/companies/{{companyId}}/settings/talents" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+    <!-- 基本情報 -->
+    <div class="tl-card">
+      <div class="tl-card__header">基本情報</div>
+      <div class="tl-grid tl-grid--4">
+        <div class="tl-field">
+          <label class="tl-label">名前 <span class="tl-req">必須</span></label>
+          <input class="tl-input" name="name" required>
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">イニシャル（外部表示用）<span class="tl-req">必須</span></label>
+          <input class="tl-input" name="internal_name" placeholder="S.Hなど" required>
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">年齢</label>
+          <input class="tl-input" type="number" name="age" min="15" max="80" step="1" inputmode="numeric">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">役割</label>
+          <input class="tl-input" name="role" placeholder="例）SE / PMO / ディレクター など">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">都道府県</label>
+          <input class="tl-input" name="prefecture" placeholder="例）東京 / 大阪 など">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">希望単価（万円）</label>
+          <input class="tl-input" type="number" name="desired_rate" placeholder="例）70">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">働き方</label>
+          <select class="tl-select" name="work_style">
+            <option value="">選択してください</option>
+            {{#each selects.workStyles}}
+              {{#if (eq this "remote")}}
+                <option value="remote">フルリモートのみ</option>
+              {{else if (eq this "hybrid")}}
+                <option value="hybrid">ハイブリッド</option>
+              {{else if (eq this "onsite")}}
+                <option value="onsite">常駐</option>
+              {{/if}}
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">ステータス</label>
+          <select class="tl-select" name="status">
+            <option value="">選択してください</option>
+            {{#each selects.statuses}}
+              {{#if (eq this "marketing")}}
+                <option value="marketing">営業中</option>
+              {{else if (eq this "interview")}}
+                <option value="interview">面談あり</option>
+              {{else if (eq this "working")}}
+                <option value="working">稼働中</option>
+              {{else if (eq this "left")}}
+                <option value="left">離脱</option>
+              {{/if}}
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">エリア（任意）</label>
+          <input class="tl-input" name="area" placeholder="最寄り駅 / 地域 / リモート など">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">稼働開始日（任意）</label>
+          <input class="tl-input" type="date" name="available_from">
+        </div>
+
+        <div class="tl-field tl-field--full">
+          <label class="tl-label">希望案件（自由記入）</label>
+          <input class="tl-input" name="hope" placeholder="言語 / 役割 など">
+        </div>
+
+        <div class="tl-field tl-field--full">
+          <label class="tl-label">サマリー（概要）</label>
+          <textarea class="tl-textarea" name="summary_text" rows="4"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-card">
+      <div class="tl-card__header">ドキュメント</div>
+      <div class="tl-grid tl-grid--2">
+        <div class="tl-field tl-field--full">
+          <label class="tl-label">スキルシートURL（任意・ファイルがあればURLは無視）</label>
+          <input class="tl-input" type="url" name="skill_sheet_url" value="{{talent.skill_sheet_url}}">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">スキルシート（ファイル）</label>
+          {{#if talent.skill_sheet_file_path}}
+            <p><a href="{{talent.skill_sheet_file_path}}" target="_blank">現在のファイルを開く</a></p>
+          {{/if}}
+          <input class="tl-file" type="file" name="skill_sheet_file"
+            accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp,.xls,.xlsx,.xlsm,.csv,
+                    application/vnd.ms-excel,
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                    application/vnd.ms-excel.sheet.macroEnabled.12,
+                    text/csv">
+        </div>
+
+        <div class="tl-field">
+          <label class="tl-label">ポートフォリオ（ファイル任意）</label>
+          {{#if talent.portfolio_file_path}}
+            <p><a href="{{talent.portfolio_file_path}}" target="_blank">現在のファイルを開く</a></p>
+          {{/if}}
+          <input class="tl-file" type="file" name="portfolio_file"
+            accept=".pdf,.png,.jpg,.jpeg,.webp,.mp4,.zip,.xls,.xlsx,.xlsm,.csv,
+                    application/vnd.ms-excel,
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                    application/vnd.ms-excel.sheet.macroEnabled.12,
+                    text/csv">
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-actions">
+      <button class="tl-btn tl-btn--primary" type="submit">登録する</button>
+      <a class="tl-btn tl-btn--ghost" href="/menu">← メニューへ</a>
+    </div>
+  </form>
+</section>

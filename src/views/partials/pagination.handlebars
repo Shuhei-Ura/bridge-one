@@ -1,0 +1,13 @@
+{{#if (gt pages 1)}}
+<nav class="pagination">
+  {{#if hasPrev}}
+    <a href="?{{querystring q "page" (dec page)}}" class="page-link">前へ</a>
+  {{else}} <span class="page-link is-disabled">前へ</span> {{/if}}
+
+  <span class="page-info">{{page}} / {{pages}}</span>
+
+  {{#if hasNext}}
+    <a href="?{{querystring q "page" (inc page)}}" class="page-link">次へ</a>
+  {{else}} <span class="page-link is-disabled">次へ</span> {{/if}}
+</nav>
+{{/if}}

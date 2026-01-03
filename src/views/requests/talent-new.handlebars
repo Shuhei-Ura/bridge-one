@@ -1,0 +1,63 @@
+{{#section "title"}}
+  <title>要員リクエスト送信</title>
+{{/section}}
+
+{{#section "css"}}
+  <link rel="stylesheet" href="/public/css/request-form.css">
+{{/section}}
+
+<section class="tl-section">
+
+  <div class="page-title">
+    <h1>要員リクエスト送信</h1>
+    <a class="back-btn" href="/talents/{{talentId}}">← 要員詳細へ</a>
+  </div>
+
+  <form method="post" action="/companies/{{companyId}}/requests/confirm" class="request-form">
+
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <input type="hidden" name="talent_id" value="{{talentId}}">
+
+    <!-- 案件名 -->
+    <div class="form-group">
+      <label class="form-label">案件名 <span class="req">*</span></label>
+      <input
+        type="text"
+        class="form-input"
+        name="request_title"
+        maxlength="120"
+        placeholder="例）Reactエンジニア募集（長期案件）"
+        required
+        value="{{values.request_title}}"
+      >
+      <p class="form-help">
+        ※ 案件を識別できるタイトルを入力してください。<br>
+        （一覧や確認画面で表示されます）
+      </p>
+    </div>
+
+    <!-- 案件内容 -->
+    <div class="form-group">
+      <label class="form-label">案件内容 <span class="req">*</span></label>
+      <textarea
+        class="form-textarea"
+        name="message_text"
+        rows="12"
+        maxlength="4000"
+        required
+      >{{values.message_text}}</textarea>
+      <p class="form-help">
+        ※ 相手企業へ送信されます。<br>
+        秘匿情報は伏せつつ、以下を簡潔にまとめてください：<br>
+        ・業務内容 / 必須スキル / 歓迎スキル<br>
+        ・希望単価 / 勤務開始時期 / 勤務地 / 稼働率 など
+      </p>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">内容を確認する</button>
+    </div>
+
+  </form>
+
+</section>
