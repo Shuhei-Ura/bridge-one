@@ -33,6 +33,8 @@ Bridge-One は、SES / BP 企業間での
 ## 技術スタック
 - Node.js
 - NestJS
+- HTML
+- CSS
 - TypeScript
 - Prisma
 - MySQL（想定）
