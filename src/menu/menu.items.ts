@@ -29,7 +29,7 @@ export const ALL_MENU_ITEMS: MenuItem[] = [
   // SES だけ
   { key: 'my-t',      label: '自社要員一覧',       href: '/companies/:companyId/settings/talents',              visibleIf: (c) => isSes(c) || isAdmin(c) },
   { key: 'new-t',     label: '自社要員登録',       href: '/companies/:companyId/settings/talents/new',          visibleIf: (c) => isSes(c) || isAdmin(c) },
-  { key: 'search-o',  label: '案件を探す',         href: '/companies/:companyId/search/opportunities', visibleIf: (c) => isSes(c) || isAdmin(c) },
+  //{ key: 'search-o',  label: '案件を探す',         href: '/companies/:companyId/search/opportunities', visibleIf: (c) => isSes(c) || isAdmin(c) },
 
   // END だけ
   { key: 'new-o',     label: '自社案件登録',       href: '/companies/:companyId/opportunities/new',    visibleIf: (c) => isEnd(c) },

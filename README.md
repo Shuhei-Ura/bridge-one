@@ -1,98 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Bridge-One（教材用公開リポジトリ）
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Bridge-One とは
+Bridge-One は、SES / BP 企業間での  
+**案件・人材・企業情報を管理する業務システム**として開発されたプロジェクトです。
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+本リポジトリは、実運用を目指して開発したシステムを  
+**エンジニアを目指す方向けの教材**として公開しています。
 
-## Description
+単なるサンプルコードではなく、  
+**実務でよくある構成・設計・判断**をそのまま残している点が特徴です。
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 想定読者
+- エンジニアを目指して学習中の方
+- 未経験〜初級エンジニア
+- CRUD は作れるが、業務システムの全体像が見えない方
+- 「実務ではどういう考え方で作るのか」を知りたい方
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## この教材で学べること
+- NestJS を用いた実務寄りのアプリケーション構成
+- 認証・権限を考慮した設計の考え方
+- Prisma を用いた ORM / DB 設計
+- 管理画面系（Handlebars）の実装例
+- 機能単位でのディレクトリ分割
+- 技術だけでなく「なぜこの設計にしたか」という判断軸
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## 技術スタック
+- Node.js
+- NestJS
+- TypeScript
+- Prisma
+- MySQL（想定）
+- Handlebars（管理画面テンプレート）
+- ESLint / Prettier
 
-# production mode
-$ npm run start:prod
-```
+---
 
-## Run tests
+## ディレクトリ構成（抜粋）
+src/
+├─ auth/ 認証・認可関連
+├─ users/ ユーザー管理
+├─ companies/ 企業管理
+├─ talents/ 人材管理
+├─ views/ 管理画面テンプレート
 
-```bash
-# unit tests
-$ npm run test
+yaml
+コードをコピーする
 
-# e2e tests
-$ npm run test:e2e
+実務でよく使われる **「機能単位での構成」**を意識しています。
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
+## 想定エンジニアレベル・単価感
+このシステムを **一人で設計〜実装まで行える場合**、  
+SES 市場では以下のレベル感が想定されます。
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- エンジニア歴：2〜3年程度
+- 想定単価：**55万〜70万円前後**
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+※ 案件内容・商流・地域により変動します。
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+---
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## テストログインについて
+本システムには、役割の異なるユーザーを想定した
+テスト用アカウントが存在します。
 
-## Resources
+具体的なログイン情報については、
+学習メンバー向けに別途共有しています。
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 使い方（学習の進め方）
 
-## Support
+### 1. ログインする
+- 上記いずれかのテストアカウントでログイン
+- 立場によって見える画面・操作の違いを確認
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 2. 中身を読む
+おすすめの順番：
+1. README を読む
+2. `src/` 配下の構成をざっと確認
+3. `auth` 周りの処理を追う
+4. 案件・人材系の CRUD を確認
+5. 「なぜこの設計なのか」を考える
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 教材としてのポイント
+- 同じシステムでも **立場によって役割が異なる**こと
+- 技術だけでなく **業務視点・運用視点**が重要であること
+- 「作れる」だけではなく「使われる」システムとは何か
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 本プロジェクトを教材として公開する理由
+Bridge-One は実運用を目指して開発しましたが、  
+最終的に **事業としての価値が薄い**と判断し、お蔵入りとなりました。
+
+その判断も含めて、
+
+- 技術だけではプロダクトは成立しないこと
+- 市場・運用・商流の理解が重要であること
+- 業務システム開発の現実
+
+これらを学習材料として残すため、教材として公開しています。
+
+---
+
+## 注意
+本リポジトリは **学習用途を目的とした公開**です。  
+商用利用・本番利用については各自で判断してください。
